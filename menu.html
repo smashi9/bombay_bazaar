@@ -29,10 +29,24 @@ nav{
   background:var(--teal);padding:14px 20px;
   display:flex;align-items:center;justify-content:space-between;
   position:sticky;top:0;z-index:300;
+  transition:padding .3s ease;
 }
-.nav-logo{font-family:"Adelios",serif;font-size:22px;color:var(--cream);letter-spacing:3px;text-transform:uppercase;text-decoration:none;}
-.nav-links{display:flex;gap:20px;list-style:none;}
-.nav-links a{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--cream);text-decoration:none;opacity:.85;font-family:"EB Garamond",serif;transition:opacity .2s;}
+nav.scrolled{padding:8px 14px;}
+.nav-logo{
+  font-family:"Adelios",serif;font-size:22px;color:var(--cream);
+  letter-spacing:3px;text-transform:uppercase;text-decoration:none;
+  transition:font-size .3s ease, letter-spacing .3s ease;
+}
+nav.scrolled .nav-logo{font-size:15px;letter-spacing:2px;}
+.nav-links{display:flex;gap:20px;list-style:none;transition:gap .3s ease;}
+nav.scrolled .nav-links{gap:12px;}
+.nav-links a{
+  font-size:11px;letter-spacing:2px;text-transform:uppercase;
+  color:var(--cream);text-decoration:none;opacity:.85;
+  font-family:"EB Garamond",serif;
+  transition:opacity .2s, font-size .3s ease;
+}
+nav.scrolled .nav-links a{font-size:9px;}
 .nav-links a:hover{opacity:1;}
 
 /* ── PAGE HEADER ── */
@@ -60,11 +74,12 @@ nav{
   background:var(--light-bg);
   padding:6px 0 0;
   position:fixed;
-  top:49px;
+  top:49px; /* updated dynamically by JS */
   left:0;right:0;
   z-index:200;
   border-bottom:2px solid var(--teal);
   box-shadow:0 4px 16px rgba(26,40,32,.18);
+  transition:top .3s ease;
 }
 .filter-tabs{
   display:flex;flex-wrap:nowrap;overflow-x:auto;
@@ -447,7 +462,7 @@ nav{
 </div>
 
 <!-- FILTER TABS -->
-<div class="filter-wrap">
+<div class="filter-wrap" id="filterWrap">
   <div class="filter-tabs">
     <button class="ftab-btn active" onclick="filterMenu(this,'all')">All</button>
   <button class="ftab-btn" onclick="filterMenu(this,'salads')">Salads &amp; More</button>
@@ -1699,6 +1714,26 @@ function checkAnchorHighlight() {
 }
 
 // ── INIT ──────────────────────────────────────────────────────────────────────
+
+// Shrink nav on scroll + keep filter bar flush below it
+(function(){
+  var nav = document.querySelector('nav');
+  var filterWrap = document.getElementById('filterWrap');
+
+  function setFilterTop(){
+    var navH = nav.getBoundingClientRect().height;
+    filterWrap.style.top = navH + 'px';
+  }
+
+  window.addEventListener('scroll', function(){
+    nav.classList.toggle('scrolled', window.scrollY > 60);
+    setFilterTop();
+  }, {passive:true});
+
+  window.addEventListener('resize', setFilterTop, {passive:true});
+  setFilterTop(); // set correct position on load
+})();
+
 renderGrid("all");
 updateCartUI();
 window.addEventListener("hashchange", checkAnchorHighlight);

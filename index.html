@@ -49,21 +49,28 @@ nav{
   padding:14px 20px;
   display:flex; align-items:center; justify-content:space-between;
   position:sticky; top:0; z-index:200;
+  transition:padding .3s ease;
 }
+nav.scrolled{padding:8px 14px;}
 .nav-logo{
   font-family:"Adelios",serif; font-size:22px;
   color:var(--cream); letter-spacing:3px; text-transform:uppercase;
+  transition:font-size .3s ease, letter-spacing .3s ease;
 }
+nav.scrolled .nav-logo{font-size:15px; letter-spacing:2px;}
 .nav-links{
   display:flex; gap:20px; list-style:none;
+  transition:gap .3s ease;
 }
+nav.scrolled .nav-links{gap:12px;}
 .nav-links a{
   font-size:var(--fs-xs); letter-spacing:2px; text-transform:uppercase;
   color:var(--cream); text-decoration:none; opacity:.85;
   font-family:"EB Garamond",serif;
   padding:4px 0;
-  transition:opacity .2s;
+  transition:opacity .2s, font-size .3s ease;
 }
+nav.scrolled .nav-links a{font-size:9px;}
 .nav-links a:hover{opacity:1;}
 
 /* ══════════════════════════════════════
@@ -644,6 +651,14 @@ function showTab(btn, id) {
   document.getElementById('tab-' + id).classList.add('active');
   btn.classList.add('active');
 }
+</script>
+<script>
+(function(){
+  var nav = document.querySelector('nav');
+  window.addEventListener('scroll', function(){
+    nav.classList.toggle('scrolled', window.scrollY > 60);
+  }, {passive:true});
+})();
 </script>
 </body>
 </html>
